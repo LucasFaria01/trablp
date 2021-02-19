@@ -1,32 +1,19 @@
 package br.ifsul.trabLp;
 
-import static java.util.Collections.singletonList;
-import static java.util.Objects.isNull;
-import static javax.swing.JOptionPane.showMessageDialog;
-import static org.apache.logging.log4j.util.Strings.isEmpty;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import static java.util.Collections.singletonList;
+import static java.util.Objects.isNull;
+import static javax.swing.JOptionPane.showMessageDialog;
+import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @SpringBootApplication
 public class TrabLpApplication {
@@ -101,10 +88,12 @@ public class TrabLpApplication {
         final JFrame frameSecaoArtista = gerarFrame("Seção Artista");
 
         final JPanel painelSecaoArtista = new JPanel();
-        painelSecaoArtista.setLayout(new GridLayout(3, 1, 20, 20));
+        painelSecaoArtista.setLayout(new GridLayout(0, 1, 20, 20));
 
         final JButton btCadastrarArtista = new JButton("Cadastrar Artista");
         final JButton btListarArtistas = new JButton("Listar Artistas");
+
+        final JButton btVoltar = new JButton("Voltar");
 
         btCadastrarArtista.addActionListener(l -> {
             frameSecaoArtista.dispose();
@@ -116,9 +105,15 @@ public class TrabLpApplication {
             irParaTelaListarArtistas();
         });
 
+        btVoltar.addActionListener(l -> {
+            frameSecaoArtista.dispose();
+            criaUI();
+        });
+
         painelSecaoArtista.add(gerarTituloSecao("Seção Artista"));
         painelSecaoArtista.add(btCadastrarArtista);
         painelSecaoArtista.add(btListarArtistas);
+        painelSecaoArtista.add(btVoltar);
 
         frameSecaoArtista.setContentPane(painelSecaoArtista);
     }
@@ -128,10 +123,16 @@ public class TrabLpApplication {
         final JFrame frameSecaoFestival = gerarFrame("Seção Festival");
 
         final JPanel painelSecaoFestival = new JPanel();
-        painelSecaoFestival.setLayout(new GridLayout(3, 1, 20, 20));
+        painelSecaoFestival.setLayout(new GridLayout(0, 1, 20, 20));
 
         final JButton btCadastrarFestival = new JButton("Cadastrar Festival");
         final JButton btListarFestivais = new JButton("Listar Festivais");
+
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameSecaoFestival.dispose();
+            criaUI();
+        });
 
         btCadastrarFestival.addActionListener(l -> {
             frameSecaoFestival.dispose();
@@ -146,6 +147,7 @@ public class TrabLpApplication {
         painelSecaoFestival.add(gerarTituloSecao("Seção Festival"));
         painelSecaoFestival.add(btCadastrarFestival);
         painelSecaoFestival.add(btListarFestivais);
+        painelSecaoFestival.add(btVoltar);
 
         frameSecaoFestival.setContentPane(painelSecaoFestival);
     }
@@ -155,10 +157,16 @@ public class TrabLpApplication {
         final JFrame frameSecaoMusica = gerarFrame("Seção Música");
 
         final JPanel painelSecaoMusica = new JPanel();
-        painelSecaoMusica.setLayout(new GridLayout(3, 1, 20, 20));
+        painelSecaoMusica.setLayout(new GridLayout(0, 1, 20, 20));
 
         final JButton btCadastrarMusica = new JButton("Cadastrar Música");
         final JButton btListarMusicas = new JButton("Listar Músicas");
+
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameSecaoMusica.dispose();
+            criaUI();
+        });
 
         btCadastrarMusica.addActionListener(l -> {
             frameSecaoMusica.dispose();
@@ -173,6 +181,7 @@ public class TrabLpApplication {
         painelSecaoMusica.add(gerarTituloSecao("Seção Música"));
         painelSecaoMusica.add(btCadastrarMusica);
         painelSecaoMusica.add(btListarMusicas);
+        painelSecaoMusica.add(btVoltar);
 
         frameSecaoMusica.setContentPane(painelSecaoMusica);
     }
@@ -182,13 +191,22 @@ public class TrabLpApplication {
         final JFrame frameListaMusicas = gerarFrame("Músicas");
 
         final JPanel painelListaMusicas = new JPanel();
-        painelListaMusicas.setLayout(new GridLayout(0, 2, 50, 50));
+        painelListaMusicas.setLayout(new GridLayout(0, 1, 20, 20));
+
+        final JPanel painelMusicas = new JPanel();
+        painelMusicas.setLayout(new GridLayout(0, 2, 20, 20));
+
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameListaMusicas.dispose();
+            irParaSecaoMusica();
+        });
 
         final List<Musica> musicas = musicaRepository.findAll();
 
         if (musicas.isEmpty()) {
 
-            painelListaMusicas.add(new JLabel("Não há músicas cadastrados no momento"));
+            painelMusicas.add(new JLabel("Não há músicas cadastrados no momento"));
         } else {
 
             musicas.forEach(m -> {
@@ -201,11 +219,13 @@ public class TrabLpApplication {
                     irParaTelaMusica(m);
                 });
 
-                painelListaMusicas.add(lblMusica);
-                painelListaMusicas.add(btMusica);
+                painelMusicas.add(lblMusica);
+                painelMusicas.add(btMusica);
             });
         }
 
+        painelListaMusicas.add(painelMusicas);
+        painelListaMusicas.add(btVoltar);
         frameListaMusicas.setContentPane(painelListaMusicas);
     }
 
@@ -216,10 +236,16 @@ public class TrabLpApplication {
         final JPanel painelTelaMusica = new JPanel();
         painelTelaMusica.setLayout(new GridLayout(0, 1, 20, 20));
 
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameTelaMusica.dispose();
+            irParaTelaListarMusicas();
+        });
+
         painelTelaMusica.add(gerarTituloSecao(musica.getNome()));
 
         painelTelaMusica.add(new JLabel(musica.getArtista().getNome() + " - " + musica.getNome() + " (" +
-            musica.getDuracao() + " seg) "));
+                musica.getDuracao() + " seg) "));
 
         JTextArea textArea = new JTextArea(musica.getLetra());
         textArea.setFont(new Font("Serif", Font.ITALIC, 16));
@@ -230,6 +256,7 @@ public class TrabLpApplication {
         areaScrollPane.setPreferredSize(new Dimension(250, 250));
 
         painelTelaMusica.add(areaScrollPane);
+        painelTelaMusica.add(btVoltar);
 
         frameTelaMusica.setContentPane(painelTelaMusica);
     }
@@ -241,6 +268,12 @@ public class TrabLpApplication {
         final JPanel painelCadastroMusica = new JPanel();
         painelCadastroMusica.setLayout(new GridLayout(0, 1, 20, 20));
 
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameCadastroMusica.dispose();
+            irParaSecaoMusica();
+        });
+
         final List<Artista> artistas = artistaRepository.findAll();
 
 //        if (artistas.isEmpty()) {
@@ -250,7 +283,7 @@ public class TrabLpApplication {
 //        }
 
         final JComboBox<String> cbArtistas = new JComboBox<>(
-            artistas.stream().map(Artista::getNome).toArray(String[]::new));
+                artistas.stream().map(Artista::getNome).toArray(String[]::new));
 
         painelCadastroMusica.add(new JLabel("Nome"));
         painelCadastroMusica.add(tfNomeMusica);
@@ -273,22 +306,24 @@ public class TrabLpApplication {
         btCadastrarMusica.addActionListener(l -> cadastrarMusica(artistas, (String) cbArtistas.getSelectedItem()));
         painelCadastroMusica.add(btCadastrarMusica);
 
+        painelCadastroMusica.add(btVoltar);
+
         frameCadastroMusica.setContentPane(painelCadastroMusica);
     }
 
     private static void cadastrarMusica(final List<Artista> artistas, final String opcaoSelecionada) {
 
         if (isEmpty(tfNomeMusica.getText()) || isEmpty(tfLetraMusica.getText())
-            || isEmpty(tfDuracaoMusica.getText()) || isNull(opcaoSelecionada)) {
+                || isEmpty(tfDuracaoMusica.getText()) || isNull(opcaoSelecionada)) {
 
             showMessageDialog(null, "É necessário preencher todos os dados da música para cadastrá-la!");
             return;
         }
 
         final Artista artistaSelecionado = artistas.stream() // criar um comboBox de Artista
-            .filter(a -> a.getNome().equals(opcaoSelecionada))
-            .findFirst()
-            .orElse(null);
+                .filter(a -> a.getNome().equals(opcaoSelecionada))
+                .findFirst()
+                .orElse(null);
 
         final Musica musica = new Musica();
         musica.setNome(tfNomeMusica.getText());
@@ -308,14 +343,23 @@ public class TrabLpApplication {
         final JFrame frameListaFestivais = gerarFrame("Festivais");
 
         final JPanel painelListaFestivais = new JPanel();
-        painelListaFestivais.setLayout(new GridLayout(0, 2, 50, 50));
+        painelListaFestivais.setLayout(new GridLayout(0, 1, 20, 20));
+
+        final JPanel painelFestivais = new JPanel();
+        painelFestivais.setLayout(new GridLayout(1, 2, 20, 20));
+
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameListaFestivais.dispose();
+            irParaSecaoFestival();
+        });
 
         final List<Festival> festivais = festivalRepository.findAll();
 
         if (festivais.isEmpty()) {
 
             final JLabel lblSemFestivais = new JLabel("Não há festivais cadastrados no momento");
-            painelListaFestivais.add(lblSemFestivais);
+            painelFestivais.add(lblSemFestivais);
         } else {
 
             festivais.forEach(f -> {
@@ -328,11 +372,13 @@ public class TrabLpApplication {
                     irParaTelaFestival(f);
                 });
 
-                painelListaFestivais.add(lblFestival);
-                painelListaFestivais.add(btFestival);
+                painelFestivais.add(lblFestival);
+                painelFestivais.add(btFestival);
             });
         }
 
+        painelListaFestivais.add(painelFestivais);
+        painelListaFestivais.add(btVoltar);
         frameListaFestivais.setContentPane(painelListaFestivais);
     }
 
@@ -343,12 +389,18 @@ public class TrabLpApplication {
         final JPanel painelTelaFestival = new JPanel();
         painelTelaFestival.setLayout(new GridLayout(0, 1, 20, 20));
 
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameTelaFestival.dispose();
+            irParaTelaListarFestivais();
+        });
+
         painelTelaFestival.add(gerarTituloSecao(festival.getNome()));
 
         final JPanel painelInfosFestival = new JPanel();
         painelInfosFestival.setLayout(new GridLayout(0, 1, 20, 20));
         final String infosFestival = "Nome: " + festival.getNome() + " | Local: " + festival.getLocal()
-            + " | Data: " + festival.getData() + " | Categoria: " + festival.getCategoria();
+                + " | Data: " + festival.getData() + " | Categoria: " + festival.getCategoria();
         painelInfosFestival.add(new JLabel(infosFestival));
 
         painelTelaFestival.add(painelInfosFestival);
@@ -362,18 +414,18 @@ public class TrabLpApplication {
         } else {
 
             artistasFestival.forEach(a ->
-                painelTelaFestival.add(new JLabel(a.getNome() + " - " + a.getNacionalidade()))
+                    painelTelaFestival.add(new JLabel(a.getNome() + " - " + a.getNacionalidade()))
             );
         }
 
         painelTelaFestival.add(new JLabel("Adicionar artistas confirmados"));
 
         final List<Artista> artistasNaoConfirmados = artistaRepository.findAll().stream()
-            .filter(a -> artistasFestival.stream().noneMatch(b -> b.getId().equals(a.getId())))
-            .collect(Collectors.toList());
+                .filter(a -> artistasFestival.stream().noneMatch(b -> b.getId().equals(a.getId())))
+                .collect(Collectors.toList());
 
         final JComboBox<String> cbArtistasNaoConfirmados = new JComboBox<>(
-            artistasNaoConfirmados.stream().map(Artista::getNome).toArray(String[]::new));
+                artistasNaoConfirmados.stream().map(Artista::getNome).toArray(String[]::new));
 
         final JButton btAdicionarArtista = new JButton("Adicionar artista");
         btAdicionarArtista.addActionListener(l -> {
@@ -384,17 +436,18 @@ public class TrabLpApplication {
 
         painelTelaFestival.add(cbArtistasNaoConfirmados);
         painelTelaFestival.add(btAdicionarArtista);
+        painelTelaFestival.add(btVoltar);
 
         frameTelaFestival.add(painelTelaFestival);
     }
 
     private static void adicionarArtista(final Festival festival, final List<Artista> artistasNaoConfirmados,
-        final String selectedItem) {
+                                         final String selectedItem) {
 
         final Artista artista = artistasNaoConfirmados.stream()
-            .filter(a -> a.getNome().equals(selectedItem))
-            .findFirst()
-            .orElse(null);
+                .filter(a -> a.getNome().equals(selectedItem))
+                .findFirst()
+                .orElse(null);
 
         festival.getArtistas().add(artista);
         artista.getFestivais().add(festival);
@@ -413,6 +466,12 @@ public class TrabLpApplication {
         final JButton btCadastrarFestival = new JButton("Cadastrar Festival");
         btCadastrarFestival.addActionListener(l -> cadastrarFestival());
 
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameCadastroFestival.dispose();
+            irParaSecaoFestival();
+        });
+
         painelCadastroFestival.add(gerarTituloSecao("Cadastro Festival"));
 
         painelCadastroFestival.add(new JLabel("Nome"));
@@ -428,6 +487,7 @@ public class TrabLpApplication {
         painelCadastroFestival.add(tfLocalFestival);
 
         painelCadastroFestival.add(btCadastrarFestival);
+        painelCadastroFestival.add(btVoltar);
 
         frameCadastroFestival.setContentPane(painelCadastroFestival);
     }
@@ -436,7 +496,7 @@ public class TrabLpApplication {
 
         // adicionar validator
         if (isEmpty(tfNomeFestival.getText()) || isEmpty(tfDataFestival.getText()) ||
-            isEmpty(tfCategoriaFestival.getText()) || isEmpty(tfLocalFestival.getText())) {
+                isEmpty(tfCategoriaFestival.getText()) || isEmpty(tfLocalFestival.getText())) {
 
             showMessageDialog(null, "É necessário preencher todos os dados do festival para cadastrá-lo!");
             return;
@@ -467,6 +527,12 @@ public class TrabLpApplication {
         final JButton btCadastrarArtista = new JButton("Cadastrar Artista");
         btCadastrarArtista.addActionListener(l -> cadastrarArtista());
 
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameCadastroArtista.dispose();
+            irParaSecaoArtista();
+        });
+
         painelCadastroArtista.add(gerarTituloSecao("Cadastro Artista"));
 
         painelCadastroArtista.add(new JLabel("Nome"));
@@ -480,6 +546,8 @@ public class TrabLpApplication {
 
         painelCadastroArtista.add(btCadastrarArtista);
 
+        painelCadastroArtista.add(btVoltar);
+
         frameCadastroArtista.setContentPane(painelCadastroArtista);
     }
 
@@ -487,7 +555,7 @@ public class TrabLpApplication {
 
         // adicionar validator
         if (isEmpty(tfNomeArtista.getText()) || isEmpty(tfNacionalidadeArtista.getText()) ||
-            isEmpty(tfDataNascArtista.getText())) {
+                isEmpty(tfDataNascArtista.getText())) {
 
             showMessageDialog(null, "É necessário preencher todos os dados do artista para cadastrá-lo!");
             return;
@@ -511,13 +579,22 @@ public class TrabLpApplication {
         final JFrame frameListaArtistas = gerarFrame("Artistas");
 
         final JPanel painelListaArtistas = new JPanel();
-        painelListaArtistas.setLayout(new GridLayout(0, 2, 50, 50));
+        painelListaArtistas.setLayout(new GridLayout(0, 1, 20, 20));
+
+        final JPanel painelArtistas = new JPanel();
+        painelArtistas.setLayout(new GridLayout(0, 2, 20, 20));
+
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameListaArtistas.dispose();
+            irParaSecaoArtista();
+        });
 
         final List<Artista> artistas = artistaRepository.findAll();
 
         if (artistas.isEmpty()) {
 
-            painelListaArtistas.add(new JLabel("Não há artistas cadastrados no momento"));
+            painelArtistas.add(new JLabel("Não há artistas cadastrados no momento"));
         } else {
 
             artistas.forEach(a -> {
@@ -530,11 +607,13 @@ public class TrabLpApplication {
                     irParaTelaArtista(a);
                 });
 
-                painelListaArtistas.add(lblArtista);
-                painelListaArtistas.add(btArtista);
+                painelArtistas.add(lblArtista);
+                painelArtistas.add(btArtista);
             });
         }
 
+        painelListaArtistas.add(painelArtistas);
+        painelListaArtistas.add(btVoltar);
         frameListaArtistas.setContentPane(painelListaArtistas);
     }
 
@@ -543,7 +622,16 @@ public class TrabLpApplication {
         final JFrame frameTelaArtista = gerarFrame("Artista - " + artista.getNome());
 
         final JPanel painelTelaArtista = new JPanel();
-        painelTelaArtista.setLayout(new GridLayout(0, 2, 20, 20));
+        painelTelaArtista.setLayout(new GridLayout(0, 1, 20, 20));
+
+        final JPanel painelInfosArtista = new JPanel();
+        painelInfosArtista.setLayout(new GridLayout(0, 2, 20, 20));
+
+        final JButton btVoltar = new JButton("Voltar");
+        btVoltar.addActionListener(l -> {
+            frameTelaArtista.dispose();
+            irParaTelaListarArtistas();
+        });
 
         final JPanel painelArtistaFestivais = new JPanel();
         painelArtistaFestivais.setLayout(new GridLayout(0, 1));
@@ -567,8 +655,10 @@ public class TrabLpApplication {
             musicasArtista.forEach(f -> painelArtistaMusicas.add(new JLabel(f.getNome())));
         }
 
-        painelTelaArtista.add(painelArtistaFestivais);
-        painelTelaArtista.add(painelArtistaMusicas);
+        painelInfosArtista.add(painelArtistaFestivais);
+        painelInfosArtista.add(painelArtistaMusicas);
+        painelTelaArtista.add(painelInfosArtista);
+        painelTelaArtista.add(btVoltar);
         frameTelaArtista.setContentPane(painelTelaArtista);
     }
 
