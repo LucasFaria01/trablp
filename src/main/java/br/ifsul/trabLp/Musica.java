@@ -13,7 +13,7 @@ public class Musica {
 	
 	private Integer duracao;
 
-	@Column(length = 1000)
+	@Column(length = 5000)
 	private String letra;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
